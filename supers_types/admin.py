@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from supers_types.models import SuperTypes
+from supers_types.models import SuperType
 
 # Register your models here.
-admin.site.register(SuperTypes)
+admin.site.register(SuperType)
