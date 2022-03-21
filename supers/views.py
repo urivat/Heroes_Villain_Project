@@ -1,9 +1,9 @@
 from django.http import Http404
 from rest_framework.views import APIView
-from supers.serializer import SupersSerializer
-
-from supers_types import serializer
-from supers.serializer import SuperSerializer 
+from django.http import Http404
+import supers_types
+from supers_types.models import SuperType
+from supers.serializer import SuperSerializer
 from .models import Super
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,12 +11,26 @@ from rest_framework.response import Response
 # Create your views here.
 class SupersList(APIView):
 
-    def get(self, request, format=None):
-        super_types = request.query_params.get('supers_types_id')
-        sort_param =request.query_params.get('sort')
-        supers = Super.objects.all()
-        serializer = SuperSerializer(supers, many=True)
-        return Response(serializer.data)
+    def get(self, request, format=None):        
+        
+        
+        queryset = Super.objects.all()
+        super_type = request.query_params.get('type')
+        print(super_type)
+         
+        if super_type:
+            queryset = queryset.filter(type__type=super_type)
+        serializer = SuperSerializer(queryset, many=True)
+        return Response(serializer.data) 
+            
+
+            
+          
+            
+            
+
+        
+        
 
     def post(self, request, format=None):
         serializer = SuperSerializer(data = request.data)
@@ -30,7 +44,29 @@ class SupersList(APIView):
 
 class SupersDetails(APIView):
 
-    def get(self):
-        pass
+    def get_object(self, pk):
+        try:
+            return Super.objects.get(pk=pk)
+        except Super.DoesNotExist:
+            raise Http404
+
+    def get(self,request,pk, format=None):
+        
+        supers =self.get_object(pk)
+        serializer = SuperSerializer(supers)
+        return Response(serializer.data)
+
+    def put(self,request,pk, format=None):
+        supers = self.get_object(pk)
+        serializer=SuperSerializer(super)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format=None):
+        super = self.get_object(pk)
+        super.delete
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 

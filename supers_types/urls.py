@@ -1,8 +1,8 @@
 from django.urls import path
-from . import views
+from supers import views 
 
 
-# urlpatterns = [
-#     path('', views.SupersList.as_view()),
-#     path('<int:pk>/', views.SupersDetails.as_view())
-# ]
+urlpatterns= [
+    path('', views.SupersList.as_view()),
+    path('<int:pk>/', views.SupersDetails.as_view())
+]
