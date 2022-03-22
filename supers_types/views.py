@@ -16,7 +16,9 @@ class TypeList(APIView):
 
     def post(self, request, format=None):
         serializer = SuperTypeSerializer(request.data)
-        if serializer.is_valid(raise_exception=True, status=):
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+class TypeDetail(APIView):
+    pass
